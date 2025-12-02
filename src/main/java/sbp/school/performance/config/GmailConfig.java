@@ -11,9 +11,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
@@ -22,14 +25,18 @@ import java.util.Collections;
 @Configuration
 public class GmailConfig {
 
+    @Value("${mail.gmailSecret}")
+    private String gmailSecretPath;
+
     @Bean
+    @ConditionalOnProperty(name = "mail.gmailEnabled", havingValue = "true", matchIfMissing = false)
     public Gmail gmailService() throws Exception {
         String TOKENS_DIRECTORY_PATH = "tokens";
         JacksonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
                 JSON_FACTORY,
-                new InputStreamReader(new FileInputStream("workDir/gmailSecret.json"))
+                new InputStreamReader(new FileInputStream(gmailSecretPath))
         );
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
