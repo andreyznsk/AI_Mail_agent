@@ -11,7 +11,7 @@ pipeline {
     }
     parameters {
         string(
-                name: 'REMOTE_HOST',
+                name: 'REMOTE_HOSTps ',
                 defaultValue: '192.168.1.100',
                 description: 'IP-адрес или хост для SSH-подключения'
         )
@@ -28,7 +28,7 @@ pipeline {
                     )]) {
                         sh '''
                                echo "Подключаюсь к удалённому хосту: ${REMOTE_HOST}"
-                               timeout 30 ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@${REMOTE_HOST} '
+                               timeout 30 ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@${REMOTE_HOST}
                                if [ $? -eq 0 ]; then
                                    echo "✅ Подключение успешно"
                                else
