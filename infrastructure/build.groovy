@@ -11,7 +11,7 @@ pipeline {
     }
     parameters {
         string(
-                name: 'REMOTE_HOSTps ',
+                name: 'REMOTE_HOST',
                 defaultValue: '192.168.1.100',
                 description: 'IP-адрес или хост для SSH-подключения'
         )
