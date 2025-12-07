@@ -18,29 +18,6 @@ pipeline {
     }
     stages {
 
-        stage('preTest') {
-            steps {
-                script {
-                    withCredentials([sshUserPrivateKey(
-                            credentialsId: 'ssh-remote-host', // ID учётных данных в Jenkins
-                            keyFileVariable: 'SSH_KEY',
-                            usernameVariable: 'SSH_USER'
-                    )]) {
-                        sh '''
-                               echo "Подключаюсь к удалённому хосту: ${REMOTE_HOST}"
-                               timeout 30 ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@${REMOTE_HOST}
-                               if [ $? -eq 0 ]; then
-                                   echo "✅ Подключение успешно"
-                               else
-                                   echo "❌ Ошибка подключения или команды"
-                                   exit 1
-                               fi
-                           '''
-                    }
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
