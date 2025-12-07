@@ -1,4 +1,4 @@
-package sbp.school.performance.service;
+package sbp.school.performance.service.parsers;
 
 
 import org.jsoup.Jsoup;
@@ -18,12 +18,17 @@ public class ParserServiceHeadHunter implements ParserService {
 
     private static final Pattern pattern = Pattern.compile("\\d+");
 
-    /**
-     * Парсит HTML-письмо от HH.ru и извлекает список вакансий
-     *
-     * @param html HTML-содержимое письма
-     * @return список вакансий с заголовком, компанией, ЗП и ссылкой
-     */
+    private static final Pattern VACANCY_ID_PATTERN = Pattern.compile("/vacancy/(\\d+)");
+
+    public static String extractVacancyId(String url) {
+        if (url == null || url.isEmpty()) {
+            return null;
+        }
+        Matcher matcher = VACANCY_ID_PATTERN.matcher(url);
+        return matcher.find() ? matcher.group(1) : null;
+    }
+
+    @Override
     public List<Vacancy> parseVacancies(String html) {
         List<Vacancy> vacancies = new ArrayList<>();
         Document doc = Jsoup.parse(html);
@@ -67,7 +72,7 @@ public class ParserServiceHeadHunter implements ParserService {
                 }
             }
 
-            vacancies.add(new Vacancy(title, company, salary, link));
+            vacancies.add(new Vacancy(title, company, salary, link, extractVacancyId(link).trim()));
         }
 
         return vacancies;

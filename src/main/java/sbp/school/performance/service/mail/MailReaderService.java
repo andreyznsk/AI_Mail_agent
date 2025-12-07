@@ -1,4 +1,4 @@
-package sbp.school.performance.service;
+package sbp.school.performance.service.mail;
 
 import sbp.school.performance.dto.MailItem;
 

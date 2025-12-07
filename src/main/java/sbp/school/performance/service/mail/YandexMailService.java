@@ -1,4 +1,4 @@
-package sbp.school.performance.service;
+package sbp.school.performance.service.mail;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
@@ -6,9 +6,9 @@ import jakarta.mail.internet.MimeUtility;
 import jakarta.mail.search.FlagTerm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sbp.school.performance.dto.MailItem;
+import sbp.school.performance.dto.ParserServiceType;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -98,7 +98,7 @@ public class YandexMailService implements MailReaderService {
                         String body = extractBody(message);
                         String id = extractMessageId(message); // получаем уникальный ID
 
-                        results.add(new MailItem(id, subject, body));
+                        results.add(new MailItem(id, subject, body, ParserServiceType.YANDEX));
 
                         log.info("✅ Найдено письмо со списком вакансий: ID={}, Subject={}", id, subject);
                     }

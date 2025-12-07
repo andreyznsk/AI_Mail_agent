@@ -1,20 +1,19 @@
 package sbp.school.performance.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-
 import org.junit.jupiter.api.Test;
 import sbp.school.performance.dto.Vacancy;
+import sbp.school.performance.service.parsers.ParserServiceHeadHunter;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class ParserServiceHeadHunterTest {
 
     private final ParserServiceHeadHunter parserServiceHeadHunter = new ParserServiceHeadHunter();
-
 
 
     @Test
@@ -32,6 +31,7 @@ public class ParserServiceHeadHunterTest {
         assertEquals("«UZUM TECHNOLOGIES»", v1.company());
         assertNull(v1.salary());
         assertTrue(v1.link().startsWith("https://hh.ru/vacancy/128179669"));
+        assertEquals("128179669", v1.vacancyId());
 
         // Проверим вакансию с зарплатой
         Vacancy v4 = vacancies.get(3); // 4-я вакансия — с зарплатой
@@ -39,6 +39,7 @@ public class ParserServiceHeadHunterTest {
         assertEquals("Riverstart (ООО Риверстарт)", v4.company());
         assertEquals(160000L, v4.salary());
         assertTrue(v4.link().startsWith("https://hh.ru/vacancy/128148220"));
+        assertEquals("128148220", v4.vacancyId());
 
         // Проверим последнюю
         Vacancy v6 = vacancies.get(5);
@@ -46,6 +47,7 @@ public class ParserServiceHeadHunterTest {
         assertEquals("X5 Tech", v6.company());
         assertNull(v6.salary());
         assertTrue(v6.link().startsWith("https://hh.ru/vacancy/127120812"));
+        assertEquals("127120812", v6.vacancyId());
     }
 }
 
