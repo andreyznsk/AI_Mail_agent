@@ -19,8 +19,6 @@ public class Main {
             ChatClient chatClient = builder.build();
             String response = chatClient.prompt("Расскажи шутку").call().content();
             System.out.println(response);
-
-
         };
     }
 }

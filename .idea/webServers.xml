@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="05d62b91-ef27-4374-ab4d-c47accdacc9a" name="SberCloudServer">
-        <fileTransfer accessType="SFTP" host="213.171.27.198" port="22" sshConfigId="9ede5048-ad3e-4410-bbfc-f2d66ab6cbd1" sshConfig="SberCloud" keyPair="true">
+        <fileTransfer accessType="SFTP" host="localhost" port="22" sshConfigId="9ede5048-ad3e-4410-bbfc-f2d66ab6cbd1" sshConfig="&lt;username&gt;@localhost:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
