@@ -24,14 +24,12 @@ public class MailReaderServiceMock implements MailReaderService {
 
     @Override
     public List<MailItem> readInbox() {
-//        ClassLoader classLoader = getClass().getClassLoader();
-//        File file = new File("mail_items/mailItem.seri");
 //
-        try (InputStream inputStream = new FileInputStream("mail_item/mailItem.seri")) {
+        try (InputStream inputStream = new FileInputStream("test/mailitems.ser")) {
             Object deserialize = SerializationUtils.deserialize(inputStream.readAllBytes());
-            if (deserialize instanceof MailItem item) {
+            if (deserialize instanceof List item) {
                 log.info("✅ Успешно десериализован мок-объект: {}", item);
-                return List.of(item);
+                return item;
             } else throw new IllegalStateException("Some problem with mock");
         } catch (IOException e) {
             log.error("❌ Ошибка при чтении файла из classpath: mailitems/mailItem.seri", e);
