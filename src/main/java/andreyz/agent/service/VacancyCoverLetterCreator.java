@@ -38,8 +38,8 @@ public class VacancyCoverLetterCreator {
 
         for (MailItem mailItem : mailItems) {
             switch (mailItem.parserServiceType()){
-                case  GOOGLE -> log.info(mailItem.toString());
-                case  YANDEX -> log.info(mailItem.toString());
+                case  GOOGLE -> log.info("GOG");
+                case  YANDEX -> log.info("ya items size: {}", mailItems.size());
             }
 
         }

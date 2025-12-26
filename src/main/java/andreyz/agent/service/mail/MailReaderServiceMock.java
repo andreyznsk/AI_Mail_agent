@@ -22,13 +22,15 @@ public class MailReaderServiceMock implements MailReaderService {
         log.warn("Внимание!! Запущен мок сервис!");
     }
 
+    @SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
     @Override
     public List<MailItem> readInbox() {
 //
-        try (InputStream inputStream = new FileInputStream("test/mailitems.ser")) {
+        String mockFile = "test/mailitems.ser";
+        try (InputStream inputStream = new FileInputStream(mockFile)) {
             Object deserialize = SerializationUtils.deserialize(inputStream.readAllBytes());
             if (deserialize instanceof List item) {
-                log.info("✅ Успешно десериализован мок-объект: {}", item);
+                log.info("✅ Успешно десериализован мок-объект: {}", mockFile);
                 return item;
             } else throw new IllegalStateException("Some problem with mock");
         } catch (IOException e) {
