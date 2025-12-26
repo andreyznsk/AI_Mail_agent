@@ -1,12 +1,12 @@
-package sbp.school.performance.service.parsers;
+package andreyz.agent.service.parsers;
 
 
+import andreyz.agent.dto.Vacancy;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import sbp.school.performance.dto.Vacancy;
 
 import java.util.ArrayList;
 import java.util.List;

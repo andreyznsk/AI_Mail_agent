@@ -1,14 +1,15 @@
-package sbp.school.performance.service.mail;
+package andreyz.agent.service.mail;
 
+import andreyz.agent.dto.MailItem;
+import andreyz.agent.dto.ParserServiceType;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeUtility;
 import jakarta.mail.search.FlagTerm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import sbp.school.performance.dto.MailItem;
-import sbp.school.performance.dto.ParserServiceType;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +19,8 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public class YandexMailService implements MailReaderService {
+@ConditionalOnProperty(name = "mail.yandex.enabled", havingValue = "true")
+public class YandexReaderService implements MailReaderService {
 
     private final Session session;
 
@@ -36,12 +38,14 @@ public class YandexMailService implements MailReaderService {
             "вакансии|vacancies|резюме|new\\s+vacancy|новые\\s+вакансии|подходящие\\s+вакансии",
             Pattern.CASE_INSENSITIVE
     );
+    private static final String MY_PRIMARY_MAIL = "andreyznsk@gmail.com";
+
 
     // Ожидаемый домен отправителя
     private static final String EXPECTED_SENDER_DOMAIN = "hh.ru";
 
 
-    public YandexMailService(Session session) {
+    public YandexReaderService(Session session) {
         this.session = session;
     }
 
@@ -130,7 +134,7 @@ public class YandexMailService implements MailReaderService {
         String from = message.getFrom()[0].toString();
 
         boolean hasRelevantSubject = subject != null && VACANCY_SUBJECT_PATTERN.matcher(subject).find();
-        boolean fromHhRu = from != null && from.contains(EXPECTED_SENDER_DOMAIN);
+        boolean fromHhRu = from != null && (from.contains(EXPECTED_SENDER_DOMAIN) || from.toLowerCase().contains(MY_PRIMARY_MAIL));
 
         return hasRelevantSubject && fromHhRu;
     }

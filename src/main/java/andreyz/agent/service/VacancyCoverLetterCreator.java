@@ -1,10 +1,12 @@
-package sbp.school.performance.service;
+package andreyz.agent.service;
 
+import andreyz.agent.dto.MailItem;
+import andreyz.agent.service.mail.MailReaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import sbp.school.performance.dto.MailItem;
-import sbp.school.performance.service.mail.MailReaderService;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,11 +14,13 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@EnableScheduling
 public class VacancyCoverLetterCreator {
 
     private final List<MailReaderService> mailReaderServices;
 
-    public void createVacanciesCL() throws Exception {
+     @Scheduled(fixedRate = 60000)
+    public void createVacanciesCoverLetter() throws Exception {
 
 
         List<MailItem> mailItems = new LinkedList<>();

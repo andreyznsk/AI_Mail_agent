@@ -1,4 +1,4 @@
-package sbp.school.performance.dto;
+package andreyz.agent.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

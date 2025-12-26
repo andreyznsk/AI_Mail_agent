@@ -1,4 +1,4 @@
-package sbp.school.performance;
+package andreyz.agent;
 
 
 import org.springframework.ai.chat.client.ChatClient;

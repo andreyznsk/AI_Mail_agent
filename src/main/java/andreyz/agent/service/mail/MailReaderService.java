@@ -1,6 +1,6 @@
-package sbp.school.performance.service.mail;
+package andreyz.agent.service.mail;
 
-import sbp.school.performance.dto.MailItem;
+import andreyz.agent.dto.MailItem;
 
 import java.util.List;
 

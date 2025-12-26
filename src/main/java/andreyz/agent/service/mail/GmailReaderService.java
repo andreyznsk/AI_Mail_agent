@@ -1,5 +1,7 @@
-package sbp.school.performance.service.mail;
+package andreyz.agent.service.mail;
 
+import andreyz.agent.dto.MailItem;
+import andreyz.agent.dto.ParserServiceType;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.*;
 import jakarta.annotation.PostConstruct;
@@ -7,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import sbp.school.performance.dto.MailItem;
-import sbp.school.performance.dto.ParserServiceType;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "mail.gmailEnabled", havingValue = "true")
+@ConditionalOnProperty(name = "mail.gmail.enabled", havingValue = "true")
 public class GmailReaderService implements MailReaderService {
 
     private final Gmail gmail;

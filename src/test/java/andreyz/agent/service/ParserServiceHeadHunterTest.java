@@ -1,8 +1,8 @@
-package sbp.school.performance.service;
+package andreyz.agent.service;
 
+import andreyz.agent.dto.Vacancy;
+import andreyz.agent.service.parsers.ParserServiceHeadHunter;
 import org.junit.jupiter.api.Test;
-import sbp.school.performance.dto.Vacancy;
-import sbp.school.performance.service.parsers.ParserServiceHeadHunter;
 
 import java.io.IOException;
 import java.nio.file.Files;

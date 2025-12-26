@@ -1,4 +1,4 @@
-package sbp.school.performance.dto;
+package andreyz.agent.dto;
 
 public enum ParserServiceType {
 

@@ -1,6 +1,6 @@
-package sbp.school.performance.service.parsers;
+package andreyz.agent.service.parsers;
 
-import sbp.school.performance.dto.Vacancy;
+import andreyz.agent.dto.Vacancy;
 
 import java.util.List;
 
