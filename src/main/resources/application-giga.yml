@@ -1,6 +1,4 @@
 #file: noinspection SpringBootApplicationYaml
-server:
-  port: 8081
 spring:
   ai:
     model:
@@ -28,18 +26,3 @@ spring:
           api-key: ${GIGACHAT_API_KEY}    # Ваш Authorization Key, полученный в личном кабинете GigaChat
         scope: GIGACHAT_API_PERS           # доступны также GIGACHAT_API_B2B, GIGACHAT_API_CORP
         unsafe-ssl: true                   # отключает проверку серверных сертификатов, не рекомендуется использовать в production!
-mail:
-  gmail:
-    enabled: ${GMAIL_ENABLED:true}
-    secret: ${GMAIL_SECRET}
-  yandex:
-    enabled: ${YANDEX_ENABLED:true}
-  mock:
-    enabled: ${MOCK_ENABLED:true}
-  imap:
-    host: imap.yandex.com
-    port: 993
-    username: ${YA_LOGIN}
-    password: ${YA_PWD}  # пароль приложения!
-    inbox-folder: Vacancy
-    polling-interval-ms: 10000  # каждые 10 секунд

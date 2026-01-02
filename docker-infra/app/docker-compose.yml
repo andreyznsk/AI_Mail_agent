@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mailagent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: andreyznsk/app:mailagent.latest
+    container_name: mailagent
+    ports:
+      - "8081:8081"
+    env_file:
+      - /home/andreyz/IdeaProjects/AI_Mail_agent/workDir/secret-ya.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=giga
+    restart: unless-stopped
+    networks:
+      - mailnet
+
+networks:
+  mailnet:
+    driver: bridge

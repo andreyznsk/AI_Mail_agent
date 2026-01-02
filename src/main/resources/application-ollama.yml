@@ -8,7 +8,7 @@ spring:
     ollama:
       chat:
         model: gemma3:4b-it-q4_K_M
-      base-url: ${AI_URL}
+      base-url: "http://localhost:11431"
 mail:
   gmail:
     enabled: ${GMAIL_ENABLED:true}
