@@ -38,3 +38,5 @@ build/
 .kube
 tokens
 logs
+/docker-infra/postgres
+/docker-infra/ollama
