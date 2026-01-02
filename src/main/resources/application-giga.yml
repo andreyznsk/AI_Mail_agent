@@ -1,0 +1,45 @@
+#file: noinspection SpringBootApplicationYaml
+server:
+  port: 8081
+spring:
+  ai:
+    model:
+      chat: gigachat
+    gigachat:
+      chat:
+        options:
+          # дефолтные параметры для обращения к API GigaChat.
+          model: GigaChat        # GigaChat по дефолту, список доступных моделей - https://developers.sber.ru/docs/ru/gigachat/models
+          temperature: 0.5       # null по дефолту
+          top-p: 0.5             # null по дефолту
+          max-tokens: 200        # null по дефолту
+          repetition-penalty: 1  # null по дефолту
+          update-interval: 0     # null по дефолту
+      embedding:
+        options:
+          model: Embeddings      # Embeddings по дефолту
+          dimensions: 1024       # null по дефолту, вычисляется при первом обращении к Embedding-модели
+      internal:
+        connect-timeout: 15s     # 15 секунд по дефолту. Таймаут на установление соединения с севрером
+        read-timeout: 15s        # null по дефолту (без таймаута). Таймаут на получение ответа от сервера
+        make-system-prompt-first-message-in-memory: true  # true по дефолту; перемещает сообщение с ситемным промптом в начало
+      auth:
+        bearer:
+          api-key: ${GIGACHAT_API_KEY}    # Ваш Authorization Key, полученный в личном кабинете GigaChat
+        scope: GIGACHAT_API_PERS           # доступны также GIGACHAT_API_B2B, GIGACHAT_API_CORP
+        unsafe-ssl: true                   # отключает проверку серверных сертификатов, не рекомендуется использовать в production!
+mail:
+  gmail:
+    enabled: ${GMAIL_ENABLED:true}
+    secret: ${GMAIL_SECRET}
+  yandex:
+    enabled: ${YANDEX_ENABLED:true}
+  mock:
+    enabled: ${MOCK_ENABLED:true}
+  imap:
+    host: imap.yandex.com
+    port: 993
+    username: ${YA_LOGIN}
+    password: ${YA_PWD}  # пароль приложения!
+    inbox-folder: Vacancy
+    polling-interval-ms: 10000  # каждые 10 секунд
