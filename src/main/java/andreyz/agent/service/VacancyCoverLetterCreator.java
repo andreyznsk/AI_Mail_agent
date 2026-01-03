@@ -2,14 +2,12 @@ package andreyz.agent.service;
 
 import andreyz.agent.domain.resume.Resume;
 import andreyz.agent.dto.MailItem;
-import andreyz.agent.service.cacheResume.ContentHashCalculator;
-import andreyz.agent.service.cacheResume.ResumeCache;
 import andreyz.agent.service.mail.MailReaderService;
-import andreyz.agent.service.resume.LlmResumeParsingService;
+import andreyz.agent.service.resume.ResumeParsingService;
 import andreyz.agent.service.resume.ResumeSource;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,32 +16,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @EnableScheduling
 public class VacancyCoverLetterCreator {
 
     private final List<MailReaderService> mailReaderServices;
-    private final LlmResumeParsingService resumeParsingService;
-    private final ResumeCache resumeCache;
+    private final ResumeParsingService cachedResumeParsingService;
     private final ResumeSource resumeSource;
 
     private Resume currentResume;
 
-
+    public VacancyCoverLetterCreator(
+            List<MailReaderService> mailReaderServices,
+            @Qualifier("cachedResumeParsingService") ResumeParsingService cachedResumeParsingService,
+            ResumeSource resumeSource) {
+        this.mailReaderServices = mailReaderServices;
+        this.cachedResumeParsingService = cachedResumeParsingService;
+        this.resumeSource = resumeSource;
+    }
 
     @PostConstruct
     public void getStartedResume(){
 
-        String hash = ContentHashCalculator.sha256(resumeSource.load());
+        currentResume = cachedResumeParsingService.parse(resumeSource.load());
 
-        currentResume = resumeCache.get(hash)
-                .orElseGet(() -> {
-                    log.info("Cache mismatch!!");
-                    Resume resume = resumeParsingService.parse(resumeSource.load());
-                    resumeCache.put(hash, resume);
-                    return resume;
-                });
         log.info("started with resume {}", currentResume);
     }
 
