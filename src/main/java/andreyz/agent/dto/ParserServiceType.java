@@ -1,4 +1,4 @@
-package andreyz.agent.domain;
+package andreyz.agent.dto;
 
 public enum ParserServiceType {
 

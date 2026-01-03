@@ -8,19 +8,6 @@ spring:
     ollama:
       chat:
         model: gemma3:4b-it-q4_K_M
+        request-options:
+          timeout: 300s
       base-url: "http://localhost:11431"
-mail:
-  gmail:
-    enabled: ${GMAIL_ENABLED:true}
-    secret: ${GMAIL_SECRET}
-  yandex:
-    enabled: ${YANDEX_ENABLED:true}
-  mock:
-    enabled: ${MOCK_ENABLED:true}
-  imap:
-    host: imap.yandex.com
-    port: 993
-    username: ${YA_LOGIN}
-    password: ${YA_PWD}  # пароль приложения!
-    inbox-folder: Vacancy
-    polling-interval-ms: 10000  # каждые 10 секунд
