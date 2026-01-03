@@ -2,6 +2,9 @@
 server:
   port: 8081
 
+cache:
+  resumeDir: "test/resume"
+
 mail:
   gmail:
     enabled: ${GMAIL_ENABLED:true}

@@ -76,7 +76,7 @@ public class ParserServiceHeadHunter implements ParserService {
 
 
 
-            vacancies.add(new Vacancy(title, company, salary, link, extractVacancyId(link).trim()));
+            vacancies.add(new Vacancy(title, company, salary, link, extractVacancyId(link).trim(), "test"));
         }
 
         return vacancies;
