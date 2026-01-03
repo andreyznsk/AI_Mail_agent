@@ -1,4 +1,4 @@
-package andreyz.agent.dto;
+package andreyz.agent.domain;
 
 /**
  * Модель для хранения данных о вакансии

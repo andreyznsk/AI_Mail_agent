@@ -1,6 +1,6 @@
 package andreyz.agent.service.parsers;
 
-import andreyz.agent.dto.Vacancy;
+import andreyz.agent.domain.Vacancy;
 
 import java.util.List;
 

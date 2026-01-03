@@ -1,4 +1,4 @@
-package andreyz.agent.dto;
+package andreyz.agent.domain;
 
 import java.io.Serializable;
 

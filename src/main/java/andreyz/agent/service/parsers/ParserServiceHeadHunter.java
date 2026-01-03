@@ -1,7 +1,7 @@
 package andreyz.agent.service.parsers;
 
 
-import andreyz.agent.dto.Vacancy;
+import andreyz.agent.domain.Vacancy;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

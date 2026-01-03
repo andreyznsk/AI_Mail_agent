@@ -1,6 +1,6 @@
 package andreyz.agent.service;
 
-import andreyz.agent.dto.MailItem;
+import andreyz.agent.domain.MailItem;
 import andreyz.agent.service.mail.MailReaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

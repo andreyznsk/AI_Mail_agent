@@ -3,3 +3,9 @@ GET http://localhost:8081/hello
 ###
 
 GET http://213.171.27.198:8081/hello
+
+###
+GET https://api.hh.ru/vacancies/128179669
+
+###
+GET https://hh.ru/vacancies/128179669

@@ -1,6 +1,6 @@
 package andreyz.agent.service;
 
-import andreyz.agent.dto.Vacancy;
+import andreyz.agent.domain.Vacancy;
 import andreyz.agent.service.parsers.ParserServiceHeadHunter;
 import org.junit.jupiter.api.Test;
 

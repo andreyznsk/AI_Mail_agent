@@ -1,7 +1,7 @@
 package andreyz.agent.service.mail;
 
-import andreyz.agent.dto.MailItem;
-import andreyz.agent.dto.ParserServiceType;
+import andreyz.agent.domain.MailItem;
+import andreyz.agent.domain.ParserServiceType;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeUtility;

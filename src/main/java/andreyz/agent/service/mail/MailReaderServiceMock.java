@@ -1,6 +1,6 @@
 package andreyz.agent.service.mail;
 
-import andreyz.agent.dto.MailItem;
+import andreyz.agent.domain.MailItem;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
