@@ -11,7 +11,7 @@ class VacancyTest {
 
     @Test
     void vacancyTest() {
-        Vacancy vacancy = new Vacancy("test", "com", 10L, "link" , "128148220");
+        Vacancy vacancy = new Vacancy("test", "com", 10L, "link" , "128148220" , "test");
         log.info("{}", vacancy);
         assertNotNull(vacancy);
     }

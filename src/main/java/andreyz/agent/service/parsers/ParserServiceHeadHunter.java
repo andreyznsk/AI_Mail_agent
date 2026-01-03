@@ -2,6 +2,7 @@ package andreyz.agent.service.parsers;
 
 
 import andreyz.agent.domain.Vacancy;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,15 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class ParserServiceHeadHunter implements ParserService {
 
     private static final Pattern pattern = Pattern.compile("\\d+");
-
     private static final Pattern VACANCY_ID_PATTERN = Pattern.compile("/vacancy/(\\d+)");
+
+    private final HhApiClient hhApiClient;
+
 
     public static String extractVacancyId(String url) {
         if (url == null || url.isEmpty()) {
@@ -73,10 +78,12 @@ public class ParserServiceHeadHunter implements ParserService {
             }
 
 
+            String vacancyId = extractVacancyId(link).trim();
 
-
-
-            vacancies.add(new Vacancy(title, company, salary, link, extractVacancyId(link).trim(), "test"));
+            Optional<String> vacancyDescription = hhApiClient.fetchVacancyDescription(vacancyId);
+            if (vacancyDescription.isPresent()) {
+                vacancies.add(new Vacancy(title, company, salary, link, vacancyId, vacancyDescription.get()));
+            }
         }
 
         return vacancies;
