@@ -100,6 +100,7 @@ public class YandexReaderService implements MailReaderService {
                     if (isVacancyListEmail(message)) {
                         String subject = message.getSubject();
                         String body = extractBody(message);
+                        log.debug("mail body: {}", body);
                         String id = extractMessageId(message); // получаем уникальный ID
 
                         results.add(new MailItem(id, subject, body, ParserServiceType.YANDEX));
@@ -148,17 +149,17 @@ public class YandexReaderService implements MailReaderService {
             Multipart multipart = (Multipart) part.getContent();
             for (int i = 0; i < multipart.getCount(); i++) {
                 BodyPart bodyPart = multipart.getBodyPart(i);
+                if (bodyPart.isMimeType("text/html")) {
+                    return extractBody(bodyPart);
+                }
+            }
+            for (int i = 0; i < multipart.getCount(); i++) {
+                BodyPart bodyPart = multipart.getBodyPart(i);
                 if (bodyPart.isMimeType("text/plain")) {
                     return extractBody(bodyPart);
                 }
             }
             // Если нет plain text — попробуем HTML
-            for (int i = 0; i < multipart.getCount(); i++) {
-                BodyPart bodyPart = multipart.getBodyPart(i);
-                if (bodyPart.isMimeType("text/html")) {
-                    return extractBody(bodyPart);
-                }
-            }
         } else if (part.isMimeType("message/rfc822")) {
             return extractBody((Part) part.getContent());
         }

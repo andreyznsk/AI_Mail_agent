@@ -32,6 +32,8 @@
         </rollingPolicy>
     </appender>
 
+    <logger name="andreyz.agent.service.mail.YandexReaderService" level="DEBUG" />
+
     <!-- Root logger configuration -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
