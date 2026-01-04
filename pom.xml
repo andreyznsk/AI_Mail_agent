@@ -24,6 +24,11 @@
                     <version>4.0.0</version>
                 </dependency>-->
         <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-ollama</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>chat.giga</groupId>
             <artifactId>spring-ai-starter-model-gigachat</artifactId>
             <version>1.0.6</version>
@@ -71,6 +76,21 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+
+        <!-- если нужен Prometheus -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
         <!-- Jakarta Mail (имя заменило старый javax.mail) -->
         <dependency>

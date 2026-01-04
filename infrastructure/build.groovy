@@ -1,5 +1,7 @@
 String dockerCred = "DockerCred"
 
+
+
 pipeline {
     agent {
         label 'Local'
@@ -7,7 +9,14 @@ pipeline {
     options {
         ansiColor('xterm')
     }
+    parameters {
+        string(
+                name: 'REMOTE_HOST',
+                description: 'IP-адрес или хост для SSH-подключения'
+        )
+    }
     stages {
+
         stage('Build') {
             steps {
                 script {
@@ -26,7 +35,7 @@ pipeline {
         }
         stage('Docker build and upload') {
             steps {
-                script{
+                script {
                     withCredentials([usernamePassword(credentialsId: dockerCred, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         // Login to Docker Hub
                         sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"

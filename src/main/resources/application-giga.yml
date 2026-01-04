@@ -1,0 +1,28 @@
+#file: noinspection SpringBootApplicationYaml
+spring:
+  ai:
+    model:
+      chat: gigachat
+    gigachat:
+      chat:
+        options:
+          # дефолтные параметры для обращения к API GigaChat.
+          model: GigaChat        # GigaChat по дефолту, список доступных моделей - https://developers.sber.ru/docs/ru/gigachat/models
+          temperature: 0.0       # null по дефолту
+          top-p: 1.0             # null по дефолту
+          max-tokens: 5120        # null по дефолту
+          repetition-penalty: 1.0  # null по дефолту
+          update-interval: 0     # null по дефолту
+      embedding:
+        options:
+          model: Embeddings      # Embeddings по дефолту
+          dimensions: 1024       # null по дефолту, вычисляется при первом обращении к Embedding-модели
+      internal:
+        connect-timeout: 15s     # 15 секунд по дефолту. Таймаут на установление соединения с севрером
+        read-timeout: 15s        # null по дефолту (без таймаута). Таймаут на получение ответа от сервера
+        make-system-prompt-first-message-in-memory: true  # true по дефолту; перемещает сообщение с ситемным промптом в начало
+      auth:
+        bearer:
+          api-key: ${GIGACHAT_API_KEY}    # Ваш Authorization Key, полученный в личном кабинете GigaChat
+        scope: GIGACHAT_API_PERS           # доступны также GIGACHAT_API_B2B, GIGACHAT_API_CORP
+        unsafe-ssl: true                   # отключает проверку серверных сертификатов, не рекомендуется использовать в production!

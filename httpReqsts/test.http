@@ -1,0 +1,21 @@
+GET http://localhost:8081/hello
+
+###
+
+GET http://213.171.27.198:8081/hello
+
+###
+GET https://api.hh.ru/vacancies/128179669
+
+###
+GET https://hh.ru/vacancies/128179669
+
+###
+POST http://localhost:11431/api/generate
+Content-Type: application/json
+
+{
+  "model": "gemma3:4b-it-q4_K_M",
+  "prompt": "привет",
+  "stream": false
+}
