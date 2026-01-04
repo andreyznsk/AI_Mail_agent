@@ -9,7 +9,11 @@ public class ResumeParsingPrompt {
         Extract structured data from the resume text below.
         Return ONLY valid JSON.
         Do NOT add explanations.
-
+        
+        yearsOfExperience usually like: Опыт работы — 19 лет
+        
+        skills.level only enum: BASIC | INTERMEDIATE | STRONG - If you cannot match it, set BASIC.
+        
         JSON schema:
         {
           "personalInfo": {

@@ -20,6 +20,6 @@ public class LlmClientImpl implements LlmClient {
 
     @Override
     public String complete(String prompt) {
-        return chatClient.prompt(prompt).call().content();
+        return chatClient.prompt(prompt).call().content().replaceAll("`","").replaceAll("^(?:json)?", "").trim();
     }
 }

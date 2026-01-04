@@ -23,6 +23,9 @@ public class CoverLetterPromptBuilder {
         TASK:
         Write a highly targeted cover letter that explains
         WHY the candidate is a strong match for THIS specific vacancy.
+        
+        Language:
+        Write the cover letter strictly in %s.
 
         OUTPUT FORMAT:
         Strict JSON with fields:
@@ -91,6 +94,7 @@ public class CoverLetterPromptBuilder {
         This is a response to THIS vacancy.
         """
         .formatted(
+                request.language(),
             v.company(),
             v.title(),
             v.description(),

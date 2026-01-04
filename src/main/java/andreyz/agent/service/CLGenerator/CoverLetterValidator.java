@@ -31,17 +31,18 @@ public class CoverLetterValidator {
                     sections.put(field, ""); // fallback empty
                 }
             }
-            fullText = String.join("\n\n", sections.get("intro"), sections.get("skills"), sections.get("closing")).toLowerCase();
+            fullText = String.join("\n\n", sections.get("intro"), sections.get("skills"), sections.get("closing"));
+            String normalize = fullText.toLowerCase();
 
             // skills section must reference strengths
             for (String strength : request.matchResult().strengths()) {
-                if (!fullText.contains(strength.toLowerCase())) {
+                if (!normalize.contains(strength.toLowerCase())) {
                     warnings.add("Strength from MatchResult not reflected in CL: " + strength);
                 }
             }
 
             for (String gap : request.matchResult().gaps()) {
-                if (fullText.contains(gap.toLowerCase())) {
+                if (normalize.contains(gap.toLowerCase())) {
                     warnings.add("Gap mentioned in Cover Letter: " + gap);
                 }
             }
