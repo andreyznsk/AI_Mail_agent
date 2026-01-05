@@ -26,10 +26,15 @@ public class HhApiClient {
         this.objectMapper = new ObjectMapper();
     }
 
+    public record VacancyContainer(String description, String area) {
+    }
+
+    ;
+
     /**
      * Получаем описание вакансии по vacancyId через HH API
      */
-    public Optional<String> fetchVacancyDescription(String vacancyId) {
+    public Optional<VacancyContainer> fetchVacancyDescription(String vacancyId) {
         String url = "https://api.hh.ru/vacancies/" + vacancyId;
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -45,7 +50,10 @@ public class HhApiClient {
                 JsonNode root = objectMapper.readTree(response.body());
                 String rawHtml = root.path("description").asText();
                 // Убираем HTML-теги для удобного отображения
-                return Optional.of(Jsoup.parse(rawHtml).text());
+                String disc = Jsoup.parse(rawHtml).text();
+                String areaName = root.path("area").path("name").asText(null); // вернёт null, если поле отсутствует
+                log.debug("Vacancy area: {}", areaName);
+                return Optional.of(new VacancyContainer(disc, areaName));
             } else {
                 log.error("HH API returned status {} for vacancy {}", response.statusCode(), vacancyId);
             }

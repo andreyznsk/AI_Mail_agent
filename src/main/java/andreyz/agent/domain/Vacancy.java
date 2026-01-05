@@ -6,6 +6,6 @@ package andreyz.agent.domain;
  * @param title Getters
  */
 
-public record Vacancy(String title, String company, Long salary, String link, String vacancyId, String description) {
+public record Vacancy(String title, String company, Long salary, String link, String vacancyId, String description, String area) {
 
 }

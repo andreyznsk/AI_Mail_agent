@@ -1,0 +1,63 @@
+package andreyz.agent.persistence.entity;
+
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+@Table("vacancy_snapshot")
+@Data
+public class VacancySnapshotEntity {
+
+    @Id
+    private UUID id;
+
+    @Column("company_name")
+    private String companyName;
+
+    @Column("position_title")
+    private String positionTitle;
+
+    @Column("salary")
+    private Long salary;
+
+    @Column("region")
+    private String region;
+
+    @Column("vacancy_text")
+    private String vacancyText;
+
+    @Column("source")
+    private String source;
+
+    @Column("received_at")
+    private OffsetDateTime receivedAt;
+
+    @Column("created_at")
+    private OffsetDateTime createdAt;
+
+    public VacancySnapshotEntity(
+            UUID id,
+            String companyName,
+            String positionTitle,
+            long salary,
+            String region,
+            String vacancyText,
+            String source,
+            OffsetDateTime receivedAt,
+            OffsetDateTime createdAt
+    ) {
+        this.id = id;
+        this.companyName = companyName;
+        this.positionTitle = positionTitle;
+        this.salary = salary;
+        this.region = region;
+        this.vacancyText = vacancyText;
+        this.source = source;
+        this.receivedAt = receivedAt;
+        this.createdAt = createdAt;
+    }
+}
