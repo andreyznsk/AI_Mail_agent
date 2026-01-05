@@ -7,8 +7,6 @@ import andreyz.agent.domain.resume.Resume;
 import andreyz.agent.domain.resumeMatcher.MatchResult;
 import andreyz.agent.dto.MailItem;
 import andreyz.agent.persistence.dto.VacancyProcessingResult;
-import andreyz.agent.persistence.repo.CoverLetterSnapshotRepository;
-import andreyz.agent.persistence.repo.MatchResultSnapshotRepository;
 import andreyz.agent.persistence.repo.VacancySnapshotRepository;
 import andreyz.agent.service.CLGenerator.CoverLetterGenerator;
 import andreyz.agent.service.mail.MailReaderService;
@@ -41,6 +39,8 @@ public class VacancyCoverLetterCreator {
     private final ParserService hhParseService;
     private final ResumeVacancyMatcher resumeVacancyMatcher;
     private final VacancyPersistService vacancyPersistService;
+    private final VacancySnapshotRepository vacancyRepository;
+
 
     private Resume currentResume;
 
@@ -49,8 +49,8 @@ public class VacancyCoverLetterCreator {
             @Qualifier("cachedResumeParsingService") ResumeParsingService cachedResumeParsingService,
             ResumeSource resumeSource,
             CoverLetterGenerator coverLetterGenerator,
-            ParserService hhParseService,
-            ResumeVacancyMatcher resumeVacancyMatcher, VacancySnapshotRepository vacancyRepository, MatchResultSnapshotRepository matchResultRepository, CoverLetterSnapshotRepository coverLetterRepository, VacancyPersistService vacancyPersistService) {
+            ParserService hhParseService, ResumeVacancyMatcher resumeVacancyMatcher,
+            VacancyPersistService vacancyPersistService, VacancySnapshotRepository vacancyRepository) {
         this.mailReaderServices = mailReaderServices;
         this.cachedResumeParsingService = cachedResumeParsingService;
         this.resumeSource = resumeSource;
@@ -58,10 +58,11 @@ public class VacancyCoverLetterCreator {
         this.hhParseService = hhParseService;
         this.resumeVacancyMatcher = resumeVacancyMatcher;
         this.vacancyPersistService = vacancyPersistService;
+        this.vacancyRepository = vacancyRepository;
     }
 
     @PostConstruct
-    public void getStartedResume(){
+    public void getStartedResume() {
 
         currentResume = cachedResumeParsingService.parse(resumeSource.load());
 
@@ -80,14 +81,21 @@ public class VacancyCoverLetterCreator {
         }
 
         for (MailItem mailItem : mailItems) {
-            switch (mailItem.parserServiceType()){
-                case  GOOGLE -> log.info("GOG");
-                case  YANDEX -> {
+            switch (mailItem.parserServiceType()) {
+                case GOOGLE -> log.info("GOG");
+                case YANDEX -> {
                     List<Vacancy> vacancies = hhParseService.parseVacancies(mailItem.body());
                     log.info("Found {} vacancies to generate CR", vacancies.size());
                     for (Vacancy vacancy : vacancies) {
+
+                        // Проверяем, есть ли уже такой sourceId + source
+                        if (vacancyRepository.existsBySourceIdAndSource(vacancy.vacancyId(), vacancy.source().getName())) {
+                            log.info("Vacancy {} from {} already processed, skipping", vacancy.vacancyId(), vacancy.source().getName());
+                            continue;
+                        }
+
                         Optional<MatchResult> match = resumeVacancyMatcher.match(currentResume, vacancy);
-                        if (match.isPresent()){
+                        if (match.isPresent()) {
                             CoverLetterResponse coverLetter = coverLetterGenerator.generate(new CoverLetterRequest(currentResume, vacancy, match.get(), Locale.forLanguageTag("ru-RU")));
                             vacancyPersistService.persist(new VacancyProcessingResult(vacancy, match.get(), coverLetter, mailItem.parserServiceType()));
                             log.debug("Cover letter for vacancy title, company: {}, {} is: {}", vacancy.title(), vacancy.company(), coverLetter);

@@ -9,7 +9,7 @@ public class VacancyMapper {
 
     public static VacancySnapshotEntity toEntity(
             Vacancy vacancy,
-            String source,
+            String mailsSource,
             OffsetDateTime receivedAt
     ) {
         return new VacancySnapshotEntity(
@@ -19,7 +19,9 @@ public class VacancyMapper {
                 vacancy.salary() == null ? 0L : vacancy.salary(),
                 vacancy.area(),
                 vacancy.description(),
-                source,
+                vacancy.source().getName(),
+                vacancy.vacancyId(),
+                mailsSource,
                 receivedAt,
                 receivedAt
         );
