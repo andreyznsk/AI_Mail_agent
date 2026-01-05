@@ -19,8 +19,7 @@ public class LlmResumeParsingService implements ResumeParsingService {
     @Override
     public Resume parse(String rawResumeText) {
         String prompt = ResumeParsingPrompt.build(rawResumeText);
-        String json = llmClient.complete(prompt).replaceAll("`","").replaceAll("^(?:json)?", "").trim();
-
+        String json = llmClient.complete(prompt);
         try {
             return objectMapper.readValue(json, Resume.class);
         } catch (Exception e) {

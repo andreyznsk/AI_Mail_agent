@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -63,7 +64,7 @@ public class VacancyCoverLetterCreator {
 
     @Scheduled(fixedRate = 60000)
     public void createVacanciesCoverLetter() throws Exception {
-
+        log.info("/* ======================= START CR CREATOR ======================= */");
 
         List<MailItem> mailItems = new LinkedList<>();
 
@@ -77,14 +78,17 @@ public class VacancyCoverLetterCreator {
                 case  YANDEX -> {
                     List<Vacancy> vacancies = hhParseService.parseVacancies(mailItem.body());
                     for (Vacancy vacancy : vacancies) {
-                        MatchResult match = resumeVacancyMatcher.match(currentResume, vacancy);
-                        CoverLetterResponse coverLetter = coverLetterGenerator.generate(new CoverLetterRequest(currentResume, vacancy, match, Locale.forLanguageTag("ru-RU")));
-                        log.info("Cover letter for vacancy title, company: {}, {} is: {}", vacancy.title(), vacancy.company(), coverLetter);
+                        Optional<MatchResult> match = resumeVacancyMatcher.match(currentResume, vacancy);
+                        if (match.isPresent()){
+                            CoverLetterResponse coverLetter = coverLetterGenerator.generate(new CoverLetterRequest(currentResume, vacancy, match.get(), Locale.forLanguageTag("ru-RU")));
+                            log.debug("Cover letter for vacancy title, company: {}, {} is: {}", vacancy.title(), vacancy.company(), coverLetter);
+                        }
                     }
                 }
             }
 
         }
+        log.info("/* ======================= FINISHED CR CREATOR ======================= */");
 
     }
 }
