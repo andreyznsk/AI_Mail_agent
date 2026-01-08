@@ -2,6 +2,7 @@ package andreyz.agent.service.parsers;
 
 
 import andreyz.agent.domain.Vacancy;
+import andreyz.agent.domain.VacancySource;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -80,9 +81,9 @@ public class ParserServiceHeadHunter implements ParserService {
 
             String vacancyId = extractVacancyId(link).trim();
 
-            Optional<String> vacancyDescription = hhApiClient.fetchVacancyDescription(vacancyId);
+            Optional<HhApiClient.VacancyContainer> vacancyDescription = hhApiClient.fetchVacancyDescription(vacancyId);
             if (vacancyDescription.isPresent()) {
-                vacancies.add(new Vacancy(title, company, salary, link, vacancyId, vacancyDescription.get()));
+                vacancies.add(new Vacancy(title, company, salary, link, vacancyId, vacancyDescription.get().description(), vacancyDescription.get().area(), VacancySource.HH));
             }
         }
 

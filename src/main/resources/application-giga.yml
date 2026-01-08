@@ -7,7 +7,7 @@ spring:
       chat:
         options:
           # дефолтные параметры для обращения к API GigaChat.
-          model: GigaChat        # GigaChat по дефолту, список доступных моделей - https://developers.sber.ru/docs/ru/gigachat/models
+          model: GigaChat-2-Max        # GigaChat по дефолту, список доступных моделей - https://developers.sber.ru/docs/ru/gigachat/models
           temperature: 0.0       # null по дефолту
           top-p: 1.0             # null по дефолту
           max-tokens: 5120        # null по дефолту

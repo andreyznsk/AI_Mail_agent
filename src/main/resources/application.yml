@@ -6,6 +6,7 @@ cache:
   resumeDir: "test/resume"
 
 mail:
+  to: ${MAIL_TO:test@test.ru}
   gmail:
     enabled: ${GMAIL_ENABLED:true}
     secret: ${GMAIL_SECRET}
@@ -20,3 +21,21 @@ mail:
     password: ${YA_PWD}  # пароль приложения!
     inbox-folder: Vacancy
     polling-interval-ms: 10000  # каждые 10 секунд
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ragdb
+    username: postgres
+    password: postgres
+  flyway:
+    baseline-description: true
+    baseline-on-migrate: true
+    create-schemas: true
+    default-schema: public
+    enabled: true
+    locations: classpath:db/migration
+    schemas: public
+    url: jdbc:postgresql://localhost:5432/ragdb
+    user: postgres
+    password: postgres
+    validate-on-migrate: true

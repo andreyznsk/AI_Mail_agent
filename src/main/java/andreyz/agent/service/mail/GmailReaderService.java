@@ -1,5 +1,6 @@
 package andreyz.agent.service.mail;
 
+import andreyz.agent.domain.draftAnswer.DraftEmailRequest;
 import andreyz.agent.dto.MailItem;
 import andreyz.agent.dto.ParserServiceType;
 import com.google.api.services.gmail.Gmail;
@@ -12,8 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static andreyz.agent.utils.MailDateUtils.fromGmailInternalDate;
 
 @Slf4j
 @Service
@@ -51,6 +56,41 @@ public class GmailReaderService implements MailReaderService {
     }
 
     @Override
+    public void markAsRead(String originalMessageId) {
+        try {
+            // Формируем модификацию: пометить как прочитанное
+            ModifyMessageRequest mods = new ModifyMessageRequest()
+                    .setRemoveLabelIds(Collections.singletonList("UNREAD"));
+            gmail.users().messages().modify("me", originalMessageId, mods).execute();
+            log.info("Письмо {} помечено как прочитанное в Gmail", originalMessageId);
+        } catch (Exception e) {
+            log.error("Ошибка при пометке письма как прочитанного (Gmail), messageId={}", originalMessageId, e);
+        }
+    }
+
+    @Override
+    public void createDraftEmail(DraftEmailRequest request) {
+        try {
+            Message message = new Message();
+            message.setRaw(Base64.getUrlEncoder().encodeToString(
+                    ("To: " + request.to() + "\r\n" +
+                            "Subject: " + request.subject() + "\r\n" +
+                            "Content-Type: text/html; charset=UTF-8\r\n\r\n" +
+                            request.htmlBody()).getBytes(StandardCharsets.UTF_8)
+            ));
+
+            Draft draft = new Draft();
+            draft.setMessage(message);
+
+            gmail.users().drafts().create("me", draft).execute();
+            log.info("Черновик письма создан в Gmail для {}", request.to());
+        } catch (Exception e) {
+            log.error("Ошибка при создании черновика письма в Gmail", e);
+        }
+    }
+
+
+    @Override
     public List<MailItem> readInbox() throws Exception {
         List<MailItem> results = new ArrayList<>();
         String user = "me";
@@ -83,7 +123,7 @@ public class GmailReaderService implements MailReaderService {
             String body = extractBody(full);
             String id = full.getId(); // Gmail ID — уникальный и пригоден для дальнейших операций
 
-            results.add(new MailItem(id, subject, body, ParserServiceType.GOOGLE));
+            results.add(new MailItem(id, subject, body, ParserServiceType.GOOGLE, fromGmailInternalDate(m.getInternalDate())));
 
             log.info("✅ Подтверждено: письмо со списком вакансий. ID: {}, Subject: {}", id, subject);
         }

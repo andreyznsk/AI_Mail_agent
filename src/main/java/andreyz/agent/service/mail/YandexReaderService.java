@@ -1,9 +1,12 @@
 package andreyz.agent.service.mail;
 
+import andreyz.agent.domain.draftAnswer.DraftEmailRequest;
 import andreyz.agent.dto.MailItem;
 import andreyz.agent.dto.ParserServiceType;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeUtility;
 import jakarta.mail.search.FlagTerm;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static andreyz.agent.utils.MailDateUtils.toZonedDateTime;
 
 @Slf4j
 @Service
@@ -35,7 +40,7 @@ public class YandexReaderService implements MailReaderService {
 
     // Ключевые слова в теме
     private static final Pattern VACANCY_SUBJECT_PATTERN = Pattern.compile(
-            "вакансии|vacancies|резюме|new\\s+vacancy|новые\\s+вакансии|подходящие\\s+вакансии",
+            "(вакансии|vacancies|резюме|new\\s+vacancy|новые\\s+вакансии|подходящие\\s+вакансии)",
             Pattern.CASE_INSENSITIVE
     );
     private static final String MY_PRIMARY_MAIL = "andreyznsk@gmail.com";
@@ -103,7 +108,7 @@ public class YandexReaderService implements MailReaderService {
                         log.debug("mail body: {}", body);
                         String id = extractMessageId(message); // получаем уникальный ID
 
-                        results.add(new MailItem(id, subject, body, ParserServiceType.YANDEX));
+                        results.add(new MailItem(id, subject, body, ParserServiceType.YANDEX, toZonedDateTime(message.getReceivedDate())));
 
                         log.info("✅ Найдено письмо со списком вакансий: ID={}, Subject={}", id, subject);
                     }
@@ -121,6 +126,73 @@ public class YandexReaderService implements MailReaderService {
         }
     }
 
+    @Override
+    public void markAsRead(String originalMessageId) {
+        Store store = null;
+        Folder inbox = null;
+        try {
+            store = session.getStore("imap");
+            store.connect(username, password);
+            inbox = store.getFolder(inboxFolder);
+            inbox.open(Folder.READ_WRITE);
+
+            Message message = findMessageById(inbox, originalMessageId);
+            if (message != null) {
+                message.setFlag(Flags.Flag.SEEN, true);
+                log.info("Письмо {} помечено как прочитанное в Yandex", originalMessageId);
+            } else {
+                log.warn("Письмо {} не найдено в папке {}", originalMessageId, inboxFolder);
+            }
+        } catch (Exception e) {
+            log.error("Ошибка при пометке письма как прочитанного (Yandex), messageId={}", originalMessageId, e);
+        } finally {
+            try {
+                if (inbox != null && inbox.isOpen()) inbox.close(true);
+                if (store != null && store.isConnected()) store.close();
+            } catch (MessagingException e) {
+                log.warn("Ошибка при закрытии IMAP соединения", e);
+            }
+        }
+    }
+
+    @Override
+    public void createDraftEmail(DraftEmailRequest request) {
+        try {
+            Session smtpSession = Session.getInstance(session.getProperties());
+            MimeMessage message = new MimeMessage(smtpSession);
+            message.setFrom(new InternetAddress(MY_PRIMARY_MAIL));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(request.to()));
+            message.setSubject(request.subject(), "UTF-8");
+            message.setContent(request.htmlBody(), "text/html; charset=UTF-8");
+
+            // Создаем черновик через флаг "Draft" (Yandex поддерживает это через IMAP)
+            Store store = session.getStore("imap");
+            store.connect(username, password);
+            Folder draftsFolder = store.getFolder("Черновики");
+            draftsFolder.open(Folder.READ_WRITE);
+            message.setFlag(Flags.Flag.DRAFT, true);
+            draftsFolder.appendMessages(new Message[]{message});
+            draftsFolder.close(true);
+            store.close();
+
+            log.info("Черновик письма создан в Yandex для {}", request.to());
+        } catch (Exception e) {
+            log.error("Ошибка при создании черновика письма в Yandex", e);
+        }
+    }
+
+    /** Вспомогательный метод для поиска письма по messageId в IMAP */
+    private Message findMessageById(Folder folder, String messageId) throws MessagingException {
+        for (Message msg : folder.getMessages()) {
+            String[] headers = msg.getHeader("Message-ID");
+            if (headers != null && headers.length > 0 && headers[0].equals(messageId)) {
+                return msg;
+            }
+        }
+        return null;
+    }
+
+
     private String extractMessageId(Message message) throws MessagingException {
         String[] ids = message.getHeader("Message-ID");
         if (ids != null && ids.length > 0) {
@@ -134,7 +206,9 @@ public class YandexReaderService implements MailReaderService {
         String subject = message.getSubject();
         String from = message.getFrom()[0].toString();
 
-        boolean hasRelevantSubject = subject != null && VACANCY_SUBJECT_PATTERN.matcher(subject).find();
+        boolean hasRelevantSubject = subject != null
+                && subject.toLowerCase().contains("вакансии")
+                && subject.toLowerCase().contains("java");
         boolean fromHhRu = from != null && (from.contains(EXPECTED_SENDER_DOMAIN) || from.toLowerCase().contains(MY_PRIMARY_MAIL));
 
         return hasRelevantSubject && fromHhRu;

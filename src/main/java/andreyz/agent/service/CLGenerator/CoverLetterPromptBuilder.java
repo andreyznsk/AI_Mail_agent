@@ -27,11 +27,12 @@ public class CoverLetterPromptBuilder {
         Language:
         Write the cover letter strictly in %s.
 
-        OUTPUT FORMAT:
-        Strict JSON with fields:
-        - intro
-        - skills
-        - closing
+        OUTPUT FORMAT: json
+        {
+         "intro" : "string",
+         "skills" : "string",
+         "closing" : "string"
+        }
 
         ABSOLUTE RULES:
         - Use ONLY information from Resume and MatchResult
