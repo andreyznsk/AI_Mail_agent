@@ -6,6 +6,7 @@ cache:
   resumeDir: "test/resume"
 
 mail:
+  to: ${MAIL_TO:test@test.ru}
   gmail:
     enabled: ${GMAIL_ENABLED:true}
     secret: ${GMAIL_SECRET}

@@ -1,6 +1,8 @@
 package andreyz.agent.persistence.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Table("vacancy_snapshot")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VacancySnapshotEntity {
 
     @Id
@@ -44,18 +48,4 @@ public class VacancySnapshotEntity {
 
     @Column("created_at")
     private OffsetDateTime createdAt;
-
-    public VacancySnapshotEntity(UUID id, String companyName, String positionTitle, Long salary, String region, String vacancyText, String source, String sourceId, String mailSource, OffsetDateTime receivedAt, OffsetDateTime createdAt) {
-        this.id = id;
-        this.companyName = companyName;
-        this.positionTitle = positionTitle;
-        this.salary = salary;
-        this.region = region;
-        this.vacancyText = vacancyText;
-        this.source = source;
-        this.sourceId = sourceId;
-        this.mailSource = mailSource;
-        this.receivedAt = receivedAt;
-        this.createdAt = createdAt;
-    }
 }
