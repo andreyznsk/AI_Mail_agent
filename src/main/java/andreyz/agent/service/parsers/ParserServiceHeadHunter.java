@@ -43,26 +43,14 @@ public class ParserServiceHeadHunter implements ParserService {
         Elements vacancyRows = doc.select("td[style*=\"border-top:1px solid #ededed\"]");
 
         for (Element row : vacancyRows) {
-            String title = "";
-            String company = "";
             Long salary = null;
             String link = "";
 
             // Извлекаем заголовок и ссылку
             Element titleLink = row.select("a[target=_blank]").first();
             if (titleLink != null) {
-                title = titleLink.text().trim();
+                titleLink.text();
                 link = titleLink.attr("href").trim();
-            }
-
-            // 2. Извлекаем компанию: второй <tr> внутри блока, ищем p[data-qa=mail__text] в нём
-            Elements rows = row.select("table");
-            if (rows.size() >= 3) {
-                Element secondRow = rows.get(2); // Второй <tr> — это компания
-                Element companyEl = secondRow.select("p[data-qa=mail__text]").first();
-                if (companyEl != null) {
-                    company = companyEl.text().trim();
-                }
             }
 
             // Извлекаем зарплату (если есть)
@@ -83,7 +71,7 @@ public class ParserServiceHeadHunter implements ParserService {
 
             Optional<HhApiClient.VacancyContainer> vacancyDescription = hhApiClient.fetchVacancyDescription(vacancyId);
             if (vacancyDescription.isPresent()) {
-                vacancies.add(new Vacancy(title, company, salary, link, vacancyId, vacancyDescription.get().description(), vacancyDescription.get().area(), VacancySource.HH));
+                vacancies.add(new Vacancy(vacancyDescription.get().title(), vacancyDescription.get().employerTitle(), salary, link, vacancyId, vacancyDescription.get().description(), vacancyDescription.get().area(), VacancySource.HH));
             }
         }
 

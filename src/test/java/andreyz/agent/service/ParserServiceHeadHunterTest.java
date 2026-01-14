@@ -39,7 +39,7 @@ public class ParserServiceHeadHunterTest {
 
         // Проверим вакансию с зарплатой
         Vacancy v4 = vacancies.get(3); // 4-я вакансия — с зарплатой
-        assertEquals("Java разработчик Middle/Senior (удалённо)", v4.title());
+        assertEquals("Java разработчик Middle/Senior", v4.title());
         assertEquals("Riverstart (ООО Риверстарт)", v4.company());
         assertEquals(160000L, v4.salary());
         assertTrue(v4.link().startsWith("https://hh.ru/vacancy/128148220"));

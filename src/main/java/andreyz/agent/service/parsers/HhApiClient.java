@@ -26,10 +26,7 @@ public class HhApiClient {
         this.objectMapper = new ObjectMapper();
     }
 
-    public record VacancyContainer(String description, String area) {
-    }
-
-    ;
+    public record VacancyContainer(String description, String area, String title, String employerTitle) { }
 
     /**
      * Получаем описание вакансии по vacancyId через HH API
@@ -53,7 +50,7 @@ public class HhApiClient {
                 String disc = Jsoup.parse(rawHtml).text();
                 String areaName = root.path("area").path("name").asText(null); // вернёт null, если поле отсутствует
                 log.debug("Vacancy area: {}", areaName);
-                return Optional.of(new VacancyContainer(disc, areaName));
+                return Optional.of(new VacancyContainer(disc, areaName, root.path("name").asText(""), root.path("employer").path("name").asText("")));
             } else {
                 log.error("HH API returned status {} for vacancy {}", response.statusCode(), vacancyId);
             }
